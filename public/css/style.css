@@ -1,0 +1,116 @@
+.bg-body{
+	background-color: #5CDB95;
+}
+
+.navbar-margin-bottom{
+	height: 60px;
+}
+.width{
+	flex-basis: 400px;
+	margin: 20px auto;
+}
+
+.height{
+	height: 225px;
+}
+
+.dp{
+	height: 25px;
+	width: 25px;
+	margin-right: 8px;
+}
+
+.height:hover{
+	box-shadow: 0 0 5px 2px blue;
+	transition: all 200ms ease-out;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.img{
+	width: 300px;
+	margin-right: 10px;
+}
+
+.login-info{
+	width: 100%;
+	border: 1px solid white;
+}
+
+.image-div{
+	height: 150px;
+	margin-right: 20px;
+}
+
+.image-div img{
+	height: 100%;
+}
+
+.pt-tb{
+	padding-top: -10px !important;
+}
+
+
+
+
+.carousel-inner{
+	height:400px;
+}
+
+.carousel-item{
+	height:400px;
+	background-size:cover !important;
+	background-position:center center !important;
+}
+
+
+
+
+
+
+
+
+.parlor-grid:hover{
+	z-index: 10;
+	transform: scale(1.3);
+	text-shadow: 2px 2px 5px grey;
+	font-size: 14px;
+	box-shadow: 0px 0px 10px grey;
+	transition: all 0.5s;
+}
+
+.my-gallery .card .card-body{
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	z-index:10;
+	background:rgba(0,0,0,0.5);
+	color:#FFF;
+	opacity:0;
+	transition:all 0.3s;
+}
+
+.my-gallery .card:hover .card-body{
+	opacity:1;
+}
+
+
+
+.parlor-img{
+	height:350px;
+	background-size:cover;
+	background-position:center center;
+}
+
+.parlor-name{
+	margin:0 auto;
+    padding-top: 1px;
+	width:300px;
+	color:#FFF;
+	text-align:center;
+}
