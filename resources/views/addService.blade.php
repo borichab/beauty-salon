@@ -1,127 +1,118 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container text-dark">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Add Service') }}</div>
+<div class="container mt-2">
+    <div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-header text-center bg-primary text-white">
+            <h3>{{ __('Add Service') }}</h3>
+        </div>
+        <div class="card-body text-dark">
+            <form method="POST" action="{{ route('service.store') }}" enctype="multipart/form-data">
+                @csrf
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('service.store') }}" enctype="multipart/form-data">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Service Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                           
-                        <div class="form-group row">
-                            <label for="price" class="col-md-4 col-form-label text-md-right">{{ __('Price') }}</label>
-                            
-                            <div class="col-md-6">
-                                <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price') }}" required autocomplete="price" autofocus>
-
-                                @error('price')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row">
-                            <label for="image" class="col-md-4 col-form-label text-md-right">{{ __('Image') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image" value="{{ old('image') }}" autocomplete="image">
-
-                                @error('image')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="form-group row">
-                            <label for="category" class="col-md-4 col-form-label text-md-right">{{ __('Select Category') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="category" type="radio" class="form-control @error('category') is-invalid @enderror" name="category" value="Male" required>Male
-                                <input id="category" type="radio" class="form-control @error('category') is-invalid @enderror" name="category" value="Female" required>Female
-                                <input id="category" type="radio" class="form-control @error('category') is-invalid @enderror" name="category" value="Male & Female" required>Both
-
-                                @error('category')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row">
-                            <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="description" type="textarea" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" required autocomplete="description">
-
-                                @error('description')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row">
-                            <label for="duration" class="col-md-4 col-form-label text-md-right">{{ __('Duration') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="duration" type="text" class="form-control @error('duration') is-invalid @enderror" name="duration" value="{{ old('duration') }}" required autocomplete="duration">
-
-                                @error('duration')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row">
-                            <label for="discount" class="col-md-4 col-form-label text-md-right">{{ __('Discount') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="discount" type="text" class="form-control @error('discount') is-invalid @enderror" name="discount" value="{{ old('discount') }}" required autocomplete="discount">
-
-                                @error('discount')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Add') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <!-- Service Name -->
+                <div class="form-group">
+                    <label for="name" class="font-weight-bold">Service Name</label>
+                    <input id="name" type="text" class="form-control form-control-sm @error('name') is-invalid @enderror" 
+                           name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                    @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-            </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label for="price" class="font-weight-bold">Price (₹)</label>
+                    <input id="price" type="text" class="form-control form-control-sm @error('price') is-invalid @enderror" 
+                           name="price" value="{{ old('price') }}" required autocomplete="price">
+                    @error('price')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <!-- Image -->
+                <div class="form-group">
+                    <label for="image" class="font-weight-bold">Service Image</label>
+                    <input id="image" type="file" class="form-control form-control-sm @error('image') is-invalid @enderror" 
+                           name="image">
+                    @error('image')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Category</label>
+                    <div class="d-flex align-items-center">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="category" id="man" value="Man" required>
+                            <label class="form-check-label" for="man">{{ __('Man') }}</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="category" id="woman" value="Female" required>
+                            <label class="form-check-label" for="woman">{{ __('Woman') }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="category" id="both" value="Man & Female" required>
+                            <label class="form-check-label" for="both">{{ __('Both') }}</label>
+                        </div>
+                    </div>
+                    @error('category')
+                        <span class="invalid-feedback d-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description" class="font-weight-bold">Description</label>
+                    <textarea id="description" class="form-control form-control-sm @error('description') is-invalid @enderror" 
+                              name="description" rows="3" required>{{ old('description') }}</textarea>
+                    @error('description')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <!-- Duration -->
+                <div class="form-group">
+                    <label for="duration" class="font-weight-bold">Duration (mins)</label>
+                    <input id="duration" type="number" class="form-control form-control-sm @error('duration') is-invalid @enderror" 
+                           name="duration" value="{{ old('duration') }}" required>
+                    @error('duration')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <!-- Discount -->
+                <div class="form-group">
+                    <label for="discount" class="font-weight-bold">Discount (%)</label>
+                    <input id="discount" type="number" class="form-control form-control-sm @error('discount') is-invalid @enderror" 
+                           name="discount" value="{{ old('discount') }}">
+                    @error('discount')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group text-center mb-0">
+                    <button type="submit" class="btn btn-primary btn-sm px-4">
+                        {{ __('Add Service') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

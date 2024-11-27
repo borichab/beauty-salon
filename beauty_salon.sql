@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.9
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 21, 2020 at 08:45 AM
--- Server version: 10.1.31-MariaDB
--- PHP Version: 7.2.3
+-- Generation Time: Nov 27, 2024 at 05:22 PM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 8.0.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -31,15 +30,27 @@ SET time_zone = "+00:00";
 CREATE TABLE `appointments` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
-  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `msg` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `date_time` time NOT NULL,
-  `payment_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `status` enum('pending','confirmed','cancelled') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending',
+  `message` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date_time` datetime NOT NULL,
+  `payment_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'cash',
   `parlour_id` int(10) UNSIGNED NOT NULL,
   `service_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`id`, `user_id`, `status`, `message`, `date_time`, `payment_status`, `parlour_id`, `service_id`, `created_at`, `updated_at`) VALUES
+(1, 5, 'pending', NULL, '2024-11-27 17:04:00', 'cash', 5, 3, '2024-11-25 15:06:53', '2024-11-25 15:06:53'),
+(2, 7, 'pending', NULL, '2024-11-28 21:41:00', 'cash', 6, 4, '2024-11-26 14:41:59', '2024-11-26 14:41:59'),
+(3, 7, 'confirmed', NULL, '2024-12-05 16:42:00', 'cash', 1, 1, '2024-11-26 14:42:19', '2024-11-27 12:45:50'),
+(4, 5, 'cancelled', NULL, '2024-12-07 17:44:00', 'cash', 1, 1, '2024-11-26 15:44:38', '2024-11-27 12:46:02'),
+(5, 5, 'pending', NULL, '2024-11-28 22:48:00', 'cash', 1, 6, '2024-11-26 20:49:10', '2024-11-26 20:49:10'),
+(7, 5, 'pending', NULL, '2024-11-30 16:24:00', 'cash', 4, 2, '2024-11-27 14:24:53', '2024-11-27 14:24:53');
 
 -- --------------------------------------------------------
 
@@ -53,7 +64,7 @@ CREATE TABLE `failed_jobs` (
   `queue` text COLLATE utf8_unicode_ci NOT NULL,
   `payload` longtext COLLATE utf8_unicode_ci NOT NULL,
   `exception` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -80,11 +91,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (26, '2020_01_07_093744_create_services_table', 1),
 (27, '2020_01_07_093816_create_products_table', 1),
 (28, '2020_01_07_122411_slider_image', 2),
-(29, '2020_01_07_135339_create_appointments_table', 3),
 (30, '2020_01_07_143103_create_payments_table', 4),
 (31, '2020_01_07_122411_slider__image', 5),
 (32, '2020_01_07_122411_slider_images', 6),
-(33, '2020_01_07_122411_slider__images', 7);
+(33, '2020_01_07_122411_slider__images', 7),
+(34, '2020_01_07_135339_create_appointments_table', 8),
+(35, '2020_11_26_180304_add_is_active_to_services_table', 9);
 
 -- --------------------------------------------------------
 
@@ -115,7 +127,7 @@ CREATE TABLE `parlours` (
 --
 
 INSERT INTO `parlours` (`id`, `user_id`, `name`, `image`, `owner_f_name`, `owner_l_name`, `address`, `gender`, `city`, `mobile`, `location_url`, `about_parlour`, `availability`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Beautic', '1579288336.jpg', 'Bhumi', 'Makwana', 'Tagor RoadNear om complex,Ahmedabad', 'Female', 'Ahmedabad', '6351672807', 'https://goo.gl/maps/urdQB3YaPKmpToNT7', 'It is most visited and most searched parlour in ahmedabad', 'available', '2020-01-17 13:42:16', '2020-01-17 13:42:16'),
+(1, 2, 'Beautic', '1579288336.jpg', 'Bhumi', 'Boricha', 'Tagor RoadNear om complex,Ahmedabad', 'Female', 'Ahmedabad', '6351672807', 'https://goo.gl/maps/urdQB3YaPKmpToNT7', 'It is most visited and most searched parlour in ahmedabad', 'available', '2020-01-17 13:42:16', '2024-11-27 13:59:21'),
 (4, 4, 'Milan Salon', '1579513259.jpg', 'Milan', 'Valsur', 'F-102, Near Time Square, 150 fits ring road,Rajkot', 'Male', 'Rajkot', '8596741425', 'https://goo.gl/maps/ppmY89G7xNqqu5ccA', 'Milan Salon And Day Spa is an upscale, full service spa and salon for more than 15 years in El Paso . We offer hair, nail, massage and skin care services for men and women', 'available', '2020-01-20 04:10:59', '2020-01-20 04:10:59'),
 (5, 3, 'RK Salon', '1579537628.jpg', 'Romil', 'Khokhani', 'A85 , Siddharth nagar, simada gaam', 'Male', 'Surat', '8200925624', 'https://goo.gl/maps/mjX4bD36dR4phzJS7', 'My palour is very big in varachha area', 'available', '2020-01-20 10:57:08', '2020-01-20 10:57:08'),
 (6, 6, 'Smart Palour', '1579586857.jpg', 'Romil', 'Khokhani', 'A-202, Near Limda chowk', 'Male', 'Jetpur', '8200925625', 'https://www.google.com/search?client=firefox-b-e&q=google+map', 'very good parlour', 'available', '2020-01-21 00:37:37', '2020-01-21 00:37:37');
@@ -131,6 +143,13 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `password_resets`
+--
+
+INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
+('borichab656@gmail.com', '$2y$10$rMdBOuuxb9vJ1cdztoifdeKWDFHPQpVDXWCzvbgVWwZRW6cLRnmNW', '2024-11-24 16:07:03');
 
 -- --------------------------------------------------------
 
@@ -185,19 +204,21 @@ CREATE TABLE `services` (
   `price` double(8,2) NOT NULL,
   `discount` double(8,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`id`, `parlour_id`, `name`, `image`, `description`, `category`, `duration`, `price`, `discount`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Facial', '1579334145.jpg', 'A facial is a family of skin care treatments for the face, including steam, exfoliation, extraction, creams, lotions, facial masks, peels, and massage.', 'Male & Female', '00:30:00', 600.00, 0.00, '2020-01-18 02:25:45', '2020-01-18 02:25:45'),
-(2, 4, 'Hair Cutting', '1579514104.jpg', 'Hair trimming is intended to maintain a specific shape & form. There are ways to trim one\'s own hair but usually another person is enlisted to perform the process, as it is difficult to maintain symmetry while cutting hair at the back of one\'s head.', 'Male', '00:30:00', 120.00, 0.00, '2020-01-20 04:25:04', '2020-01-20 04:25:04'),
-(3, 5, 'Shaving', '1579537820.jpg', 'Hairdresser shaving an old-fashioned razor of satisfied client..', 'Male', '00:20:00', 500.00, 0.00, '2020-01-20 11:00:20', '2020-01-20 11:00:20'),
-(4, 6, 'Leg wax', '1579586966.jpg', 'leg wax', 'Female', '00:40:00', 1000.00, 0.00, '2020-01-21 00:39:26', '2020-01-21 00:39:26'),
-(5, 6, 'abc', '1579589638.jpg', 'hiii', 'Female', '00:20:00', 133.00, 0.00, '2020-01-21 01:23:58', '2020-01-21 01:23:58');
+INSERT INTO `services` (`id`, `parlour_id`, `name`, `image`, `description`, `category`, `duration`, `price`, `discount`, `created_at`, `updated_at`, `is_active`) VALUES
+(1, 1, 'Facial', '1579334145.jpg', 'A facial is a family of skin care treatments for the face, including steam, exfoliation, extraction, creams, lotions, facial masks, peels, and massage.', 'Woman', '20', 600.00, 10.00, '2020-01-18 02:25:45', '2024-11-27 14:15:29', 1),
+(2, 4, 'Hair Cutting', '1579514104.jpg', 'Hair trimming is intended to maintain a specific shape & form. There are ways to trim one\'s own hair but usually another person is enlisted to perform the process, as it is difficult to maintain symmetry while cutting hair at the back of one\'s head.', 'Man', '00:30:00', 120.00, 0.00, '2020-01-20 04:25:04', '2020-01-20 04:25:04', 1),
+(3, 5, 'Shaving', '1579537820.jpg', 'Hairdresser shaving an old-fashioned razor of satisfied client..', 'Man', '00:20:00', 500.00, 0.00, '2020-01-20 11:00:20', '2020-01-20 11:00:20', 1),
+(4, 6, 'Leg wax', '1579586966.jpg', 'leg wax', 'Woman', '00:40:00', 1000.00, 0.00, '2020-01-21 00:39:26', '2020-01-21 00:39:26', 1),
+(6, 1, 'Body Massage', 'service5.jpg', 'Relaxing Body Massage', 'Man & Woman', '01:00:00', 2000.00, 10.00, '2024-11-26 16:50:30', '2024-11-26 17:15:08', 1),
+(7, 1, 'Hair styling', '1732646085.jpg', 'Get your stylized hair', 'Man & Woman', '00:30:00', 100.00, 0.00, '2024-11-26 17:34:45', '2024-11-27 14:05:20', 1);
 
 -- --------------------------------------------------------
 
@@ -211,16 +232,9 @@ CREATE TABLE `slider_images` (
   `msg` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `service_id` int(10) UNSIGNED NOT NULL,
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `slider_images`
---
-
-INSERT INTO `slider_images` (`id`, `title`, `msg`, `service_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Shaving', '10% off', 3, '1', '2020-01-20 11:50:24', '2020-01-20 11:50:24');
 
 -- --------------------------------------------------------
 
@@ -252,12 +266,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `f_name`, `l_name`, `email`, `mobile`, `role`, `sex`, `dob`, `photo`, `city`, `email_verified_at`, `mobile_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Bharat', 'Boricha', 'borichab656@gmail.com', '7600642639', 'Super Admin', 'Male', '1998-11-22', '1579248281.JPG', 'Rajkot', NULL, NULL, '$2y$10$JZYikE1yG59akzEhPIG.oeYDyRbCzwXwvShcBtu2QS2j3lAS390US', '5TIUnfRLokknRJhtEk2bpVIHPeCcSev7RZimPqlvz7hA4qnD67eLZWTb1Z4o', '2020-01-17 02:34:41', '2020-01-17 02:34:41'),
-(2, 'Bhumi', 'Makwana', 'bhumi@gmail.com', '6351672807', 'Admin', 'Female', '1998-06-23', '1579285464.jpg', 'Ahmedabad', NULL, NULL, '$2y$10$TViFVcehmeUBL7uFgqO9sOowjkuX81pNgGCCE6aZr53T.iTF04Gau', NULL, '2020-01-17 12:54:24', '2020-01-17 13:09:36'),
-(3, 'Neha', 'Choudhary', 'neha@gmail.com', '7896541235', 'Admin', 'Female', '1996-01-15', '1579285625.jpg', 'Jamnagar', NULL, NULL, '$2y$10$5os72SdbjI0R29nPmZpndeXGgFqak9hAcK.aFlFWWB3IQvo//2IPO', NULL, '2020-01-17 12:57:05', '2020-01-20 10:51:21'),
+(1, 'Bharat', 'Boricha', 'borichab656@gmail.com', '7600642639', 'Super Admin', 'Male', '1998-11-22', '1579248281.JPG', 'Rajkot', NULL, NULL, '$2y$10$9/yxoeF4tS74s0hmOhmXAuuKKrfiixWVBd5.NOgnRUF5Xk0XWam.W', 'zOOnAd7BhlMY19wcXeUvzsJKLmJ48XLmFnLG1rJ3IpCXADAbLw9DrMtpDCHI', '2020-01-17 02:34:41', '2020-01-17 02:34:41'),
+(2, 'Bhumi', 'Makwana', 'bhumi@gmail.com', '6351672807', 'Admin', 'Female', '1998-06-23', '1579285464.jpg', 'Ahmedabad', NULL, NULL, '$2y$10$9/yxoeF4tS74s0hmOhmXAuuKKrfiixWVBd5.NOgnRUF5Xk0XWam.W', NULL, '2020-01-17 12:54:24', '2020-01-17 13:09:36'),
+(3, 'Neha', 'Choudhary', 'neha@gmail.com', '7896541235', 'Admin', 'Female', '1996-01-15', '1579285625.jpg', 'Jamnagar', NULL, NULL, '$2y$10$9/yxoeF4tS74s0hmOhmXAuuKKrfiixWVBd5.NOgnRUF5Xk0XWam.W', NULL, '2020-01-17 12:57:05', '2020-01-20 10:51:21'),
 (4, 'Milan', 'Valsur', 'milan@gmail.com', '7548962157', 'Admin', 'Male', '1988-12-14', '1579338573.jpg', 'Mumbai', NULL, NULL, '$2y$10$u/F9SfuZu0GJo1340SpLyeVcWuf/CymXPRhHgV.XblKVEn5TBJvg6', NULL, '2020-01-18 03:39:34', '2020-01-20 04:00:54'),
-(5, 'Sachin', 'Mehta', 'sachin@gmail.com', '9879489583', 'Customer', 'Male', '1990-02-23', '1579338669.png', 'Delhi', NULL, NULL, '$2y$10$hlUoNhUgbIylv..6ouyrV.LOFUQEHW7EYyG8aY3tqEhpjBGmu0thS', NULL, '2020-01-18 03:41:09', '2020-01-21 00:23:45'),
-(6, 'Siddharth', 'Sojitra', 'siddharth@gmail.com', '9876543210', 'Admin', 'Male', '1998-12-25', '1579586505.jpg', 'Jetpur', NULL, NULL, '$2y$10$FsWAAPg9T0Yo5j7zLB4Uou1iyzNWUhRCowkd6wyFkytFoLkVnBL6S', NULL, '2020-01-21 00:31:45', '2020-01-21 00:32:57');
+(5, 'Sachin', 'Mehta', 'sachin@gmail.com', '9879489583', 'Customer', 'Male', '1990-02-23', '1579338669.png', 'Delhi', NULL, NULL, '$2y$10$9/yxoeF4tS74s0hmOhmXAuuKKrfiixWVBd5.NOgnRUF5Xk0XWam.W', NULL, '2020-01-18 03:41:09', '2020-01-21 00:23:45'),
+(6, 'Siddharth', 'Sojitra', 'siddharth@gmail.com', '9876543210', 'Admin', 'Male', '1998-12-25', '1579586505.jpg', 'Jetpur', NULL, NULL, '$2y$10$FsWAAPg9T0Yo5j7zLB4Uou1iyzNWUhRCowkd6wyFkytFoLkVnBL6S', NULL, '2020-01-21 00:31:45', '2020-01-21 00:32:57'),
+(7, 'Bhartkumar', 'Boricha', 'bhartpboricha@gmail.com', '015781719021', 'Customer', 'Male', '1998-11-22', '1732468099.jpg', 'Schmalkalden', NULL, NULL, '$2y$10$9/yxoeF4tS74s0hmOhmXAuuKKrfiixWVBd5.NOgnRUF5Xk0XWam.W', NULL, '2024-11-24 16:08:20', '2024-11-24 16:08:20');
 
 --
 -- Indexes for dumped tables
@@ -343,7 +358,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -355,13 +370,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `parlours`
 --
 ALTER TABLE `parlours`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -379,19 +394,19 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `slider_images`
 --
 ALTER TABLE `slider_images`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
@@ -401,8 +416,8 @@ ALTER TABLE `users`
 -- Constraints for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD CONSTRAINT `appointments_parlour_id_foreign` FOREIGN KEY (`parlour_id`) REFERENCES `parlours` (`id`),
-  ADD CONSTRAINT `appointments_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`),
+  ADD CONSTRAINT `appointments_parlour_id_foreign` FOREIGN KEY (`parlour_id`) REFERENCES `parlours` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `appointments_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `appointments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --

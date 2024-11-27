@@ -27,7 +27,9 @@ class SliderImage extends Controller
      */
     public function create()
     {
-        $services = Services::all();
+        $usedServiceIds = SliderImages::pluck('service_id')->toArray();
+        $services = Services::whereNotIn('id', $usedServiceIds)->get();
+
         return view('selectimage', compact('services'));
     }
 
@@ -51,51 +53,6 @@ class SliderImage extends Controller
         $input['status'] = '1';
         SliderImages::create($input);
         
-        return redirect('addSliderImage')->with('success', 'Image Added');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->back()->with('success', 'Image Added');
     }
 }

@@ -17,14 +17,14 @@ class CreateAppointmentsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('status');
-            $table->longText('msg');
-            $table->time('date_time');
-            $table->string('payment_status');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->longText('message')->default(NULL);
+            $table->dateTime('date_time');
+            $table->string('payment_status')->default('cash');
             $table->integer('parlour_id')->unsigned();
-            $table->foreign('parlour_id')->references('id')->on('parlours');
+            $table->foreign('parlour_id')->references('id')->on('parlours')->onDelete('cascade');
             $table->integer('service_id')->unsigned();
-            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->timestamps();
         });
     }

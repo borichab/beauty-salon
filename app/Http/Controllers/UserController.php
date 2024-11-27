@@ -27,6 +27,11 @@ class UserController extends Controller
     public function userInfo($id)
     {
         $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->route('users.index')->with('error', 'User not found.');
+        }
+
         return view('user_info', compact('user'));
     }
 

@@ -61,6 +61,14 @@ class ParlourController extends Controller
      */
     public function create()
     {
+         // Check if the authenticated user already has a parlour
+        $userId = Auth::user()->id;
+        $parlour = parlours::where('user_id', $userId)->first();
+
+        // If the user already has a parlour, redirect or show a message
+        if ($parlour) {
+            return redirect()->route('dashboard')->with('error', 'You already have a parlour.');
+        }
         return view('addParlour');
     }
 
@@ -113,7 +121,8 @@ class ParlourController extends Controller
      */
     public function show($id)
     {
-        //
+        $parlour = parlours::findOrFail($id);
+        return view('parlourDetail', compact('parlour'));
     }
 
     /**
@@ -124,7 +133,8 @@ class ParlourController extends Controller
      */
     public function edit($id)
     {
-        //
+        $parlour = parlours::findOrFail($id);
+        return view('editParlour', compact('parlour'));
     }
 
     /**
@@ -136,8 +146,40 @@ class ParlourController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'owner_f_name' => 'required|string|max:255',
+            'owner_l_name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'location_url' => 'required|url',
+            'mobile' => 'required|string|max:15',
+            'about_parlour' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $parlour = parlours::findOrFail($id);
+
+        $parlour->name = $validated['name'];
+        $parlour->owner_f_name = $validated['owner_f_name'];
+        $parlour->owner_l_name = $validated['owner_l_name'];
+        $parlour->address = $validated['address'];
+        $parlour->city = $validated['city'];
+        $parlour->location_url = $validated['location_url'];
+        $parlour->mobile = $validated['mobile'];
+        $parlour->about_parlour = $validated['about_parlour'];
+
+        if ($request->hasFile('image')) {
+            $imagePath = time() . '.' . $request->image->getClientOriginalExtension();
+            $request->image->move(public_path('img/parlours'), $imagePath);
+            $parlour->image = $imagePath;
+        }
+
+        $parlour->save();
+
+        return redirect('parlours/' . $id)->with('success', 'Parlour details updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.

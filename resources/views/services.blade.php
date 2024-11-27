@@ -1,35 +1,50 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-  <div class="row">
-    <div class="col-md">
-      <div class="row">
-            <div class="col-sm-12">
-                <h1>Services</h1><p>What you have to do?</p>        
-            </div>
-      </div>
-    
-      <div class="card-columns my-gallery text-white">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<div class="container mt-3">
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="display-4">Our Services</h1>
+            <p class="text-muted">Discover our wide range of beauty services and book your appointment today!</p>
+        </div>
+    </div>
+
+    <div class="row">
         @foreach($services as $service)
-            <div class="card">
-             <?php $photo='/'.$service->image ?>
-              <img class="card-img-top" src="{{ asset('img/services') }}<?php echo $photo ?>" alt="{{$service->name}}">
-              <div class="card-body">
-                <ul class="list-group bg-transparent border-0">
-                  <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-0">
-                    <h3 class="card-title">{{$service->name}}</h3>
-                    <span class="badge badge-primary badge-pill">{{$service->parlour->name}}</span>
-                  </li>
-                </ul>
-                <p class="card-text">{{$service->description}}</p>
-                <h5>Price : {{$service->price}}</h5>
-                <h5>Duration : {{$service->duration}}</h5>
-              </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <!-- Service Image -->
+                    <?php $photo = '/' . $service->image; ?>
+                    <img class="card-img-top" src="{{ asset('img/services') }}<?php echo $photo ?>" alt="{{ $service->name }}" style="height: 200px; object-fit: cover;">
+                    
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <h4 class="card-title text-dark">{{ $service->name }}</h4>
+                        <span class="badge badge-primary mb-3">{{ $service->parlour->name }}</span>
+                        <p class="card-text text-muted">{{ $service->description }}</p>
+                    </div>
+
+                    <!-- Card Footer with Price and Button -->
+                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                        <span>Price: {{ $service->price }} &#8377;</span>
+                        @if (auth()->user()->role == 'Customer')
+                            <a href="{{ route('appointments.create', ['parlour_id' => $service->parlour->id, 'service_id' => $service->id]) }}" 
+                            class="btn btn-primary btn-sm">Book Now</a>
+                        @endif
+                    </div>
+                </div>
             </div>
         @endforeach
-      </div>
     </div>
-  </div>
 </div>
 @endsection

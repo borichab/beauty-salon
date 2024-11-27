@@ -11,18 +11,17 @@ class Appointments extends Model
     ];
     
     public function service(){
-        return $this->morphTo();
+        return $this->belongsTo(Services::class);
     }
     
-    public function parlour(){
-        return $this->morphTo();
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
-    
-    public function user(){
-        return $this->morphTo();
+
+    public function parlour()
+    {
+        return $this->belongsTo(parlours::class);
     }
-    
-    public function payment(){
-        return $this->morphTo('App\Payments', 'appointment');
-    }
+
 }

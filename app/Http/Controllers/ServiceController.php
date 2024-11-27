@@ -30,9 +30,12 @@ class ServiceController extends Controller
     {
         $uid = Auth::user()->id;
         $parlour = parlours::with('user')->where('user_id', $uid)->get();
+        if ($parlour->isEmpty()) {
+            return redirect('parlours/create')->with('error', 'First you have to add your parlour');
+        }
         $pid = $parlour['0']['id'];
         $services = Services::where('parlour_id', $pid)->get();
-        return view('dashboard', compact('parlour','services'));
+        return view('dashboard', compact('parlour','services', 'pid'));
     }
     
     /**
@@ -83,17 +86,6 @@ class ServiceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -101,7 +93,8 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $service = Services::findOrFail($id);// Retrieve the service by ID
+        return view('editService', compact('service'));
     }
 
     /**
@@ -113,17 +106,45 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'required',
+            'category' => 'required',
+            'discount' => 'max:100|min:0',
+            'price' => 'required|numeric',
+            'duration' => 'required',
+        ]);
+        
+        $service = Services::findOrFail($id);
+    
+        if ($request->hasFile('image')) {
+            $input['image'] = time().'.'.$request->image->getClientOriginalExtension();
+            $request->image->move(public_path('img/services'), $input['image']);
+        }
+    
+        $service->name = $request->name;
+        $service->description = $request->description;
+        $service->category = $request->category;
+        $service->discount = $request->discount;
+        $service->price = $request->price;
+        $service->duration = $request->duration;
+    
+        if (isset($input['image'])) {
+            $service->image = $input['image'];
+        }
+    
+        $service->save();
+    
+        return redirect('admin/dashboard')->with('success', 'Service Updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function disable($id)
     {
-        //
+        $service = Services::findOrFail($id);
+        $service->is_active = !$service->is_active; 
+        $service->save();
+
+        return redirect('admin/dashboard')->with('success', 'Service Status Updated');
     }
 }

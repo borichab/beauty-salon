@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\SliderImages;
+use App\parlours;
 
 use Illuminate\Http\Request;
 
@@ -23,6 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $photos = SliderImages::all();
+        $parlours = parlours::where('availability', 'available')->get();
+        return view('welcome', compact('photos', 'parlours'));
     }
 }
