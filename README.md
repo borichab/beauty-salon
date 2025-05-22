@@ -65,7 +65,7 @@ setup_instructions:
   - step: "Move Laravel project to XAMPP/WAMP server directory"
     instructions:
       - "Copy or clone your Laravel project into the 'htdocs' folder (XAMPP) or 'www' folder (WAMP)."
-      - "Example (XAMPP on Windows): C:/xampp/htdocs/beauty-salon-laravel"
+      - "Example (XAMPP on Windows): C:/xampp/htdocs/beauty-salon"
 
   - step: "Start XAMPP/WAMP"
     instructions:
@@ -95,14 +95,14 @@ setup_instructions:
       - "Example:"
       - "  DB_HOST=127.0.0.1"
       - "  DB_PORT=3306"
-      - "  DB_DATABASE=salon_db"
+      - "  DB_DATABASE=beautysalon"
       - "  DB_USERNAME=root"
       - "  DB_PASSWORD="
 
   - step: "Create and migrate the database"
     commands:
       - "php artisan migrate"
-    note: "Ensure the database (e.g., salon_db) is created in phpMyAdmin or MySQL before running this"
+    note: "Ensure the database (e.g., beauty_salon) is created in phpMyAdmin or MySQL before running this also should be imported [beauty_salon.sql](https://github.com/borichab/beauty-salon/blob/main/beauty_salon.sql) in the created database"
 
   - step: "Set folder permissions (if needed)"
     instructions:
@@ -110,7 +110,7 @@ setup_instructions:
     note: "Use 'chmod -R 775 storage bootstrap/cache' on Linux/Mac if needed"
 
   - step: "Access the project"
-    url: "http://localhost/beauty-salon-laravel/public"
+    url: "http://localhost/beauty-salon/public"
     note: "You must use '/public' in the URL unless you've configured a virtual host"
 
   - step: "Optional - Set up virtual host (for cleaner URL)"
