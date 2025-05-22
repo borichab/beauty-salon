@@ -62,28 +62,59 @@ This is a web-based Beauty Salon Management System developed using **Laravel** a
    git clone https://github.com/borichab/beauty-salon.git
    cd beauty-salon
 setup_instructions:
+  - step: "Move Laravel project to XAMPP/WAMP server directory"
+    instructions:
+      - "Copy or clone your Laravel project into the 'htdocs' folder (XAMPP) or 'www' folder (WAMP)."
+      - "Example (XAMPP on Windows): C:/xampp/htdocs/beauty-salon-laravel"
+
+  - step: "Start XAMPP/WAMP"
+    instructions:
+      - "Open the XAMPP/WAMP Control Panel"
+      - "Start the Apache and MySQL modules"
+
   - step: "Install PHP and Composer dependencies"
     commands:
       - "composer install"
+    note: "Run this from the Laravel project root directory"
 
   - step: "Install frontend dependencies"
     commands:
       - "npm install"
       - "npm run dev"
+    note: "Requires Node.js and npm installed"
 
   - step: "Create environment configuration"
     commands:
       - "cp .env.example .env"
       - "php artisan key:generate"
 
-  - step: "Configure database in .env file"
-    note: "Update DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, and DB_PASSWORD according to your local setup"
+  - step: "Configure environment variables"
+    instructions:
+      - "Open .env file"
+      - "Update DB_HOST, DB_DATABASE, DB_USERNAME, and DB_PASSWORD to match your local MySQL (XAMPP/WAMP) settings"
+      - "Example:"
+      - "  DB_HOST=127.0.0.1"
+      - "  DB_PORT=3306"
+      - "  DB_DATABASE=salon_db"
+      - "  DB_USERNAME=root"
+      - "  DB_PASSWORD="
 
-  - step: "Run migrations"
+  - step: "Create and migrate the database"
     commands:
       - "php artisan migrate"
+    note: "Ensure the database (e.g., salon_db) is created in phpMyAdmin or MySQL before running this"
 
-  - step: "Start the Laravel development server"
-    commands:
-      - "php artisan serve"
-    note: "The application will be available at http://localhost:8000"
+  - step: "Set folder permissions (if needed)"
+    instructions:
+      - "Ensure 'storage' and 'bootstrap/cache' folders are writable"
+    note: "Use 'chmod -R 775 storage bootstrap/cache' on Linux/Mac if needed"
+
+  - step: "Access the project"
+    url: "http://localhost/beauty-salon-laravel/public"
+    note: "You must use '/public' in the URL unless you've configured a virtual host"
+
+  - step: "Optional - Set up virtual host (for cleaner URL)"
+    instructions:
+      - "Edit Apache config to map a domain (e.g., salon.test) to Laravel's /public folder"
+      - "Update your hosts file: 127.0.0.1 salon.test"
+      - "Restart Apache after making changes"
